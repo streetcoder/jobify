@@ -1,19 +1,15 @@
-import { nextTick } from "process";
 import User from "../models/User.js";
+import {StatusCodes} from 'http-status-codes'
 
-const register = async (req, res, next) => {
-  try {
+const register = async (req, res) => {  
     const user = await User.create(req.body);
-    res.status(201).json({ user });
-  } catch (error) {
-    next(error);
-  }
-};
+    res.status(StatusCodes.OK).json({ user });
+}
 
-const login = (req, res) => {
+const login = async (req, res) => {
   res.send("login user");
 };
-const updateUser = (req, res) => {
+const updateUser = async (req, res) => {
   res.send("updateUser user");
 };
 
