@@ -1,41 +1,53 @@
-import mongoose, { trusted } from 'mongoose'
-import validator from 'validator'
+import mongoose, { trusted } from "mongoose";
+import validator from "validator";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const UserSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: [true, 'Please provide name'],
-        minlength: 3,
-        maxlength: 20,
-        trim: true,
+  name: {
+    type: String,
+    required: [true, "Please provide name"],
+    minlength: 3,
+    maxlength: 20,
+    trim: true,
+  },
+  email: {
+    type: String,
+    required: [true, "Please provide email"],
+    validate: {
+      validator: validator.isEmail,
+      message: "Please provide a valid email",
     },
-    email: {
-        type: String,
-        required: [true, 'Please provide email'],
-        validate:{
-            validator: validator.isEmail,
-            message:'Please provide a valid email',
-        },
-        unique: true
-    },
-    password: {
-        type: String,
-        required: [true, 'Please provide password'],
-        minlength: 6,
-    },
-    lastName: {
-        type: String,
-        trim: true,
-        maxlength: 20,
-        default: 'lastName',
-    },
-    location: {
-        type: String,
-        trim: true,
-        maxlength: 20,
-        default: 'my city',
-    },
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: [true, "Please provide password"],
+    minlength: 6,
+  },
+  lastName: {
+    type: String,
+    trim: true,
+    maxlength: 20,
+    default: "lastName",
+  },
+  location: {
+    type: String,
+    trim: true,
+    maxlength: 20,
+    default: "my city",
+  },
+});
 
-})
+UserSchema.pre("save", async function () {
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
 
-export default mongoose.model('User', UserSchema)
+UserSchema.methods.createJWT = function () {
+  return jwt.sign({ userId: this._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWTLIFETIME,
+  });
+};
+
+export default mongoose.model("User", UserSchema);
