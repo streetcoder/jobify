@@ -29,7 +29,7 @@ const initialState = {
   token: token,
   userLocation: userLocation || '',
   jobLocation: userLocation || '',
-  showSidebar: false,
+  showSidebar: false
 };
 
 const AppContext = React.createContext();
@@ -124,7 +124,7 @@ const AppProvider = ({ children }) => {
   };
 
   return (
-    <AppContext.Provider value={{ ...state, displayAlert, registerUser, loginUser, setupUser }}>
+    <AppContext.Provider value={{ ...state, displayAlert, registerUser, loginUser, setupUser, toggleSidebar }}>
       {children}
     </AppContext.Provider>
   );
