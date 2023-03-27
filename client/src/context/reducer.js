@@ -9,7 +9,8 @@ import {
   LOGIN_USER_ERROR,
   SETUP_USER_BEGIN,
   SETUP_USER_SUCCESS,
-  SETUP_USER_ERROR,  
+  SETUP_USER_ERROR,
+  TOGGLE_SIDEBAR,
 } from "./actions";
 
 const reducer = (state, action) => {
@@ -41,8 +42,8 @@ const reducer = (state, action) => {
       userLocation: action.payload.location,
       jobLocation: action.payload.location,
       showAlert: true,
-      alertType: 'success',
-      alertText: 'User Created! Redirecting...',
+      alertType: "success",
+      alertText: "User Created! Redirecting...",
     };
   }
   if (action.type === REGISTER_USER_ERROR) {
@@ -50,7 +51,7 @@ const reducer = (state, action) => {
       ...state,
       isLoading: false,
       showAlert: true,
-      alertType: 'danger',
+      alertType: "danger",
       alertText: action.payload.msg,
     };
   }
@@ -67,8 +68,8 @@ const reducer = (state, action) => {
       userLocation: action.payload.location,
       jobLocation: action.payload.location,
       showAlert: true,
-      alertType: 'success',
-      alertText: 'Login Successful! Redirecting...',
+      alertType: "success",
+      alertText: "Login Successful! Redirecting...",
     };
   }
   if (action.type === LOGIN_USER_ERROR) {
@@ -76,7 +77,7 @@ const reducer = (state, action) => {
       ...state,
       isLoading: false,
       showAlert: true,
-      alertType: 'danger',
+      alertType: "danger",
       alertText: action.payload.msg,
     };
   }
@@ -93,7 +94,7 @@ const reducer = (state, action) => {
       userLocation: action.payload.location,
       jobLocation: action.payload.location,
       showAlert: true,
-      alertType: 'success',
+      alertType: "success",
       alertText: action.payload.alertText,
     };
   }
@@ -102,9 +103,12 @@ const reducer = (state, action) => {
       ...state,
       isLoading: false,
       showAlert: true,
-      alertType: 'danger',
+      alertType: "danger",
       alertText: action.payload.msg,
     };
+  }
+  if (action.type === TOGGLE_SIDEBAR) {
+    return { ...state, showSidebar: !state.showSidebar };
   }
 
   throw new Error(`no such action : ${action.type}`);
