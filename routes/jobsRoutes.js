@@ -9,7 +9,6 @@ import {
   showStats,
 } from "../controllers/jobsController.js";
 
-
 router.route('/').post(createJob).get(getAllJobs)
 // remeber about :id
 router.route('/stats').get(showStats)
