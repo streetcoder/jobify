@@ -9,7 +9,7 @@ import {
   REGISTER_USER_SUCCESS,
   LOGIN_USER_BEGIN,
   LOGIN_USER_SUCCESS,
-  LOGIN_USER_ERROR,  
+  LOGIN_USER_ERROR,
   SETUP_USER_BEGIN,
   SETUP_USER_SUCCESS,
   SETUP_USER_ERROR,
@@ -17,9 +17,9 @@ import {
   LOGOUT_USER,
 } from "./actions";
 
-const token = localStorage.getItem('token');
-const user = localStorage.getItem('user');
-const userLocation = localStorage.getItem('location');
+const token = localStorage.getItem("token");
+const user = localStorage.getItem("user");
+const userLocation = localStorage.getItem("location");
 
 const initialState = {
   isLoading: false,
@@ -28,9 +28,9 @@ const initialState = {
   alertType: "",
   user: user ? JSON.parse(user) : null,
   token: token,
-  userLocation: userLocation || '',
-  jobLocation: userLocation || '',
-  showSidebar: false
+  userLocation: userLocation || "",
+  jobLocation: userLocation || "",
+  showSidebar: false,
 };
 
 const AppContext = React.createContext();
@@ -50,15 +50,15 @@ const AppProvider = ({ children }) => {
   };
 
   const addUserToLocalStorage = ({ user, token, location }) => {
-    localStorage.setItem('user', JSON.stringify(user));
-    localStorage.setItem('token', token);
-    localStorage.setItem('location', location);
+    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem("token", token);
+    localStorage.setItem("location", location);
   };
 
   const removeUserFromLocalStorage = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    localStorage.removeItem('location');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("location");
   };
 
   const registerUser = async (currentUser) => {
@@ -71,7 +71,7 @@ const AppProvider = ({ children }) => {
         type: REGISTER_USER_SUCCESS,
         payload: { user, token, location },
       });
-      addUserToLocalStorage({ user, token, location })
+      addUserToLocalStorage({ user, token, location });
       // local storage later
     } catch (error) {
       // console.log(error.response);
@@ -80,7 +80,7 @@ const AppProvider = ({ children }) => {
         payload: { msg: error.response.data.msg },
       });
     }
-    clearAlert()
+    clearAlert();
   };
 
   const loginUser = async (currentUser) => {
@@ -92,49 +92,76 @@ const AppProvider = ({ children }) => {
         type: LOGIN_USER_SUCCESS,
         payload: { user, token, location },
       });
-      addUserToLocalStorage({ user, token, location })
+      addUserToLocalStorage({ user, token, location });
     } catch (error) {
       dispatch({
         type: LOGIN_USER_ERROR,
         payload: { msg: error.response.data.msg },
       });
     }
-    clearAlert()
-  }
-  const setupUser = async ({currentUser, endPoint, alertText}) => {
+    clearAlert();
+  };
+  const setupUser = async ({ currentUser, endPoint, alertText }) => {
     dispatch({ type: SETUP_USER_BEGIN });
     try {
-      const { data } = await axios.post(`/api/v1/auth/${endPoint}`, currentUser);
+      const { data } = await axios.post(
+        `/api/v1/auth/${endPoint}`,
+        currentUser
+      );
       const { user, token, location } = data;
       dispatch({
         type: SETUP_USER_SUCCESS,
         payload: { user, token, location, alertText },
       });
-      addUserToLocalStorage({ user, token, location })
+      addUserToLocalStorage({ user, token, location });
     } catch (error) {
       dispatch({
         type: SETUP_USER_ERROR,
         payload: { msg: error.response.data.msg },
       });
     }
-    clearAlert()
-  }
+    clearAlert();
+  };
 
   const toggleSidebar = () => {
     dispatch({ type: TOGGLE_SIDEBAR });
   };
 
   const logoutUser = () => {
-    dispatch({ type: LOGOUT_USER })
-    removeUserFromLocalStorage()
-  }
+    dispatch({ type: LOGOUT_USER });
+    removeUserFromLocalStorage();
+  };
 
   const updateUser = async (currentUser) => {
-    console.log(currentUser)
-  }
+    try {
+      const { data } = await axios.patch(
+        "/api/v1/auth/updateUser",
+        currentUser,
+        {
+          headers: {
+            Authorization: `Bearer ${state.token}`,
+          },
+        }
+      );
+      console.log(data);
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
 
   return (
-    <AppContext.Provider value={{ ...state, displayAlert, registerUser, loginUser, setupUser, toggleSidebar, logoutUser, updateUser }}>
+    <AppContext.Provider
+      value={{
+        ...state,
+        displayAlert,
+        registerUser,
+        loginUser,
+        setupUser,
+        toggleSidebar,
+        logoutUser,
+        updateUser,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );
