@@ -44,9 +44,6 @@ const AppProvider = ({ children }) => {
   // axios
   const authFetch = axios.create({
     baseURL: "/api/v1",
-    headers: {
-      Authorization: `Bearer ${state.token}`,
-    },
   });
 
   // request
