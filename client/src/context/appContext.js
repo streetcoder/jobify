@@ -19,6 +19,7 @@ import {
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
   HANDLE_CHANGE,
+  CLEAR_VALUES,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -42,7 +43,7 @@ const initialState = {
   jobTypeOptions: ["full-time", "part-time", "remote", "internship"],
   jobType: 'full-time',
   statusOptions: ["interview", "declined", "pending"],
-  status: 'pending'
+  status: 'pending',
 };
 
 const AppContext = React.createContext();
@@ -199,6 +200,10 @@ const AppProvider = ({ children }) => {
   const handleChange = ({name, value}) => {
     dispatch({ type: HANDLE_CHANGE, payload: { name, value } })
   }
+  
+  const clearValues = () => {
+    dispatch({ type: CLEAR_VALUES })
+  }
 
   return (
     <AppContext.Provider
@@ -212,6 +217,7 @@ const AppProvider = ({ children }) => {
         logoutUser,
         updateUser,
         handleChange,
+        clearValues,
       }}
     >
       {children}

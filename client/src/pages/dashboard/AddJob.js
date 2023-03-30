@@ -15,15 +15,16 @@ const AddJob = () => {
     status,
     statusOptions,
     handleChange,
+    clearValues,
   } = useAppContext();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('job created')
     if (!position || !company || !jobLocation) {
       displayAlert();
       return;
     }
+    console.log('create job')
   };
   const handleJobInput = (e) => {
     const name = e.target.name;
@@ -83,6 +84,12 @@ const AddJob = () => {
               onClick={handleSubmit}
             >
               submit
+            </button>
+            <button className="btn btn-block clear-btn" onClick={(e)=>{
+              e.preventDefault()
+              clearValues()
+            }}>
+              clear
             </button>
           </div>
         </div>
