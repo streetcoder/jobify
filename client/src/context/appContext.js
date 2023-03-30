@@ -20,6 +20,9 @@ import {
   UPDATE_USER_ERROR,
   HANDLE_CHANGE,
   CLEAR_VALUES,
+  CREATE_JOB_BEGIN,
+  CREATE_JOB_SUCCESS,
+  CREATE_JOB_ERROR,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -36,14 +39,14 @@ const initialState = {
   userLocation: userLocation || "",
   showSidebar: false,
   isEditing: false,
-  editJobId:'',
-  position: '',
-  company: '',
+  editJobId: "",
+  position: "",
+  company: "",
   jobLocation: userLocation || "",
   jobTypeOptions: ["full-time", "part-time", "remote", "internship"],
-  jobType: 'full-time',
+  jobType: "full-time",
   statusOptions: ["interview", "declined", "pending"],
-  status: 'pending',
+  status: "pending",
 };
 
 const AppContext = React.createContext();
@@ -187,7 +190,7 @@ const AppProvider = ({ children }) => {
       });
       addUserToLocalStorage({ user, location, token });
     } catch (error) {
-      if(error.response.status !== 401){
+      if (error.response.status !== 401) {
         dispatch({
           type: UPDATE_USER_ERROR,
           payload: { msg: error.response.data.msg },
@@ -197,13 +200,36 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
-  const handleChange = ({name, value}) => {
-    dispatch({ type: HANDLE_CHANGE, payload: { name, value } })
-  }
-  
+  const handleChange = ({ name, value }) => {
+    dispatch({ type: HANDLE_CHANGE, payload: { name, value } });
+  };
+
   const clearValues = () => {
-    dispatch({ type: CLEAR_VALUES })
-  }
+    dispatch({ type: CLEAR_VALUES });
+  };
+
+  const createJob = async () => {
+    dispatch({ type: CREATE_JOB_BEGIN });
+    try {
+      const { position, company, jobLocation, jobType, status } = state;
+      await authFetch.post("/jobs", {
+        position,
+        company,
+        jobLocation,
+        jobType,
+        status,
+      });
+      dispatch({ type: CREATE_JOB_SUCCESS });
+      dispatch({ type: CLEAR_VALUES });
+    } catch (error) {
+      if (error.response.status === 401) return;
+      dispatch({
+        type: CREATE_JOB_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
+    }
+    clearAlert()
+  };
 
   return (
     <AppContext.Provider
@@ -218,6 +244,7 @@ const AppProvider = ({ children }) => {
         updateUser,
         handleChange,
         clearValues,
+        createJob,
       }}
     >
       {children}
