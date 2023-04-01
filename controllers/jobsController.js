@@ -33,11 +33,16 @@ const updateJob = async (req, res) => {
   if (!job) {
     throw new NotFoundError(`No job with id : ${jobId}`);
   }
-  const updatedJob = await Job.findByIdAndUpdate({ _id: jobId }, req.body, {
-    new: true,
-    runValidators: true,
-  });
-  res.status(StatusCodes.OK).json({ updatedJob });
+  // const updatedJob = await Job.findByIdAndUpdate({ _id: jobId }, req.body, {
+  //   new: true,
+  //   runValidators: true,
+  // });
+
+  job.position = position
+  job.company = company
+
+  await job.save()
+  res.status(StatusCodes.OK).json({ job });
 };
 const deleteJob = async (req, res) => {
   res.send("delete job");
