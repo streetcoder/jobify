@@ -1,6 +1,13 @@
-const Job = () => {
+import moment from 'moment'
+
+const Job = ({company, createdAt}) => {
+  let date = moment(createdAt)
+  date = date.format('MMM Do, YYYY')
   return (
-    <h2>Job</h2>
+    <div>
+      <h5>{company}</h5>
+      <h5>{date}</h5>      
+    </div>
   )
 }
 
