@@ -225,7 +225,7 @@ const reducer = (state, action) => {
       isLoading: false,
       jobs: action.payload.jobs,
       totalJobs: action.payload.totalJobs,
-      numOfPage: action.payload.numOfPage,
+      numOfPages: action.payload.numOfPages,
     };
   }
 
