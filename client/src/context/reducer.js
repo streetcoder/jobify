@@ -29,6 +29,7 @@ import {
   EDIT_JOB_ERROR,
   SHOW_STATS_BEGIN,
   SHOW_STATS_SUCCESS,
+  CLEAR_FILTERS,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -227,7 +228,7 @@ const reducer = (state, action) => {
       numOfPage: action.payload.numOfPage,
     };
   }
-  
+
   if (action.type === SET_EDIT_JOB) {
     const job = state.jobs.find((job) => job._id === action.payload.id);
     const { _id, position, company, jobLocation, jobType, status } = job;
@@ -243,8 +244,8 @@ const reducer = (state, action) => {
     };
   }
 
-  if(action.type === DELETE_JOB_BEGIN){
-    return { ...state, isLoading: true }
+  if (action.type === DELETE_JOB_BEGIN) {
+    return { ...state, isLoading: true };
   }
 
   if (action.type === EDIT_JOB_BEGIN) {
@@ -260,7 +261,7 @@ const reducer = (state, action) => {
       isLoading: false,
       showAlert: true,
       alertType: "success",
-      alertText: 'Job Updated!',
+      alertText: "Job Updated!",
     };
   }
 
@@ -288,6 +289,16 @@ const reducer = (state, action) => {
       isLoading: false,
       stats: action.payload.stats,
       monthlyApplications: action.payload.monthlyApplications,
+    };
+  }
+
+  if (action.type === CLEAR_FILTERS) {
+    return {
+      ...state,
+      search: "",
+      searchStatus: "all",
+      searchType: "all",
+      sort: "latest",
     };
   }
 
