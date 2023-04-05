@@ -34,10 +34,24 @@ const getAllJobs = async (req, res) => {
   if(search){
     queryObject.position = {$regex: search, $options: 'i'}
   }
-
-
+  
   // NO AWAIT
   let result = Job.find(queryObject)
+
+  if(sort === 'latest'){
+    result = result.sort('-createdAt')
+  }
+  if(sort === 'oldest'){
+    result = result.sort('createdAt')
+  }
+  if(sort === 'a-z'){
+    result = result.sort('position')
+  }
+  if(sort === 'z-a'){
+    result = result.sort('-position')
+  }
+
+
 
   const jobs = await result;
   res
