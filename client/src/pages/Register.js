@@ -14,8 +14,15 @@ const initialState = {
 const Register = () => {
   const navigate = useNavigate();
   const [values, setValues] = useState(initialState);
-  const { user, isLoading, showAlert, displayAlert, registerUser, loginUser, setupUser } =
-    useAppContext();
+  const {
+    user,
+    isLoading,
+    showAlert,
+    displayAlert,
+    registerUser,
+    loginUser,
+    setupUser,
+  } = useAppContext();
 
   const toggleMember = () => {
     setValues({ ...values, isMember: !values.isMember });
@@ -34,7 +41,7 @@ const Register = () => {
     }
     const currentUser = { name, email, password };
     if (isMember) {
-      loginUser(currentUser)
+      loginUser(currentUser);
     } else {
       registerUser(currentUser);
     }
@@ -44,7 +51,7 @@ const Register = () => {
     if (user) {
       setTimeout(() => {
         navigate("/");
-      }, 3000);      
+      }, 3000);
     }
   }, [user, navigate]);
 
@@ -80,6 +87,20 @@ const Register = () => {
         />
         <button type="submit" className="btn btn-block" disabled={isLoading}>
           submit
+        </button>
+        <button
+          type="button"
+          className="btn btn-block btn-hipster"
+          disabled={isLoading}
+          onClick={() => {
+            setupUser({
+              currentUser: {email: 'testuser@test.com', password: 'secret'},
+              endPoint: 'login',
+              alertText: 'Login Successful! Redirecting...'
+            })
+          }}
+        >
+          {isLoading? 'loading...': 'demo app'}
         </button>
         <p>
           {values.isMember ? "Not a member yet?" : "Already a member?"}
