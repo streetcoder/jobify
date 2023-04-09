@@ -1,5 +1,5 @@
-import express from 'express'
-const router = express.Router()
+import express from "express";
+const router = express.Router();
 
 import {
   createJob,
@@ -9,9 +9,11 @@ import {
   showStats,
 } from "../controllers/jobsController.js";
 
-router.route('/').post(createJob).get(getAllJobs)
-// remeber about :id
-router.route('/stats').get(showStats)
-router.route('/:id').delete(deleteJob).patch(updateJob)
+import testUser from "../middleware/testUser.js";
 
-export default router
+router.route("/").post(testUser, createJob).get(getAllJobs);
+// remember about :id
+router.route("/stats").get(showStats);
+router.route("/:id").delete(deleteJob).patch(testUser, updateJob);
+
+export default router;
