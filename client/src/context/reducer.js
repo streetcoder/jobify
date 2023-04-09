@@ -91,7 +91,8 @@ const reducer = (state, action) => {
       jobLocation: action.payload.location,
       showAlert: true,
       alertType: "success",
-      alertText: "Login Successful! Redirecting...",
+      // alertText: "Login Successful! Redirecting...",
+      alertText: "Hi Bibhor! how are you?",
     };
   }
   if (action.type === LOGIN_USER_ERROR) {
