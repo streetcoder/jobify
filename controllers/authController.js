@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import { StatusCodes } from "http-status-codes";
 import { BadRequestError, UnAuthenticatedError } from "../errors/index.js";
+import attachCookies from "../utils/attachCookies.js";
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -15,6 +16,7 @@ const register = async (req, res) => {
 
   const user = await User.create({ name, email, password });
   const token = user.createJWT();
+  attachCookies({res, token})
   res
     .status(StatusCodes.OK)
     .json({
@@ -45,13 +47,8 @@ const login = async (req, res) => {
   }
   const token = user.createJWT()
   user.password = undefined
+  attachCookies({res, token})
 
-  const oneDay = 1000 * 60 * 60 * 24
-  res.cookie('token', token, {
-    httpOnly: true,
-    expires: new Date(Date.now() + oneDay),
-    secure: process.env.NODE_ENV === 'production',
-  })
   res.status(StatusCodes.OK).json({ user, token, location: user.location });
 };
 const updateUser = async (req, res) => {
@@ -65,7 +62,10 @@ const updateUser = async (req, res) => {
   user.lastName = lastName
   user.location = location
   await user.save()
+
   const token = user.createJWT()
+  attachCookies({res, token})
+
   res.status(StatusCodes.OK).json({ user, token, location: user.location });
 };
 
